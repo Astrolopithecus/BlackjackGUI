@@ -14,6 +14,7 @@ class GameFrame(tk.Frame):
         self.parent = parent
         self.blackjack = Blackjack(100)
 
+
         # Define string variables for text entry fields
         self.playerHand = tk.StringVar()
         self.dealerHand = tk.StringVar()
@@ -50,10 +51,10 @@ class GameFrame(tk.Frame):
         # Add the button frame to the bottom row of the main grid
         buttonFrame.grid(column=0, row=4, columnspan=2, sticky=tk.E)
 
-        # Add three buttons to the button frame
-        ttk.Button(buttonFrame, text="Hit", command=self.calculateMPG) \
+        # Add 4 buttons to the button frame
+        ttk.Button(buttonFrame, text="Hit", command=self.hit) \
             .grid(column=0, row=0, padx=5)
-        ttk.Button(buttonFrame, text="Stand", command=self.parent.destroy) \
+        ttk.Button(buttonFrame, text="Stand", command=self.stand) \
             .grid(column=1, row=0)
         ttk.Button(buttonFrame, text="New Game", command=self.newgame) \
             .grid(column=2, row=0)
@@ -63,26 +64,42 @@ class GameFrame(tk.Frame):
     # defines a method for setting up game
     def newgame(self):
         self.money.set(100)
-        self.blackjack.dealerHand.addCard(self.blackjack.deck.dealCard())
-        self.blackjack.playerHand.addCard(self.blackjack.deck.dealCard())
         self.playerHand.set(self.blackjack.playerHand)
         self.dealerHand.set(self.blackjack.dealerHand)
+        self.dealerHand.addCard(self.blackjack.deck.dealCard())
+        self.playerHand.addCard(self.blackjack.deck.dealCard())
         
+    # defines the hit method 
+    def hit(self):
+        self.blackjack.playerHand.addCard(self.blackjack.deck.dealCard())
+        if playerHand.points > 21:
+            messagebox.showerror("You Lost!", "Sorry, better luck next time!")
+            self.money = (self.money - self.bet)
+        
+    # defines the stand method 
+    def stand(self):
+        if playerHand.points > dealerHand.points:
+            messagebox.showerror("You Won!", "We played, but how long can your luck last?")
+            self.money = (self.money + self.bet)
+        elif playerHand.points <= dealerHand.points:
+            messagebox.showerror("You Lost!", "Sorry, better luck next time!")
+            self.money = (self.money - self.bet)
+            
 
     # defines a method for calculating MPG
-    def calculateMPG(self):
+    #def calculateMPG(self):
 
-        mil = self.dvA.get()
-        gal = self.dvB.get()
+    #    mil = self.dvA.get()
+    #    gal = self.dvB.get()
 
-        # verify entered values are positive number or displays error message 
-        if (mil >= 0) and (gal > 0):
-            MPG = self.mpg.calculate(mil,gal)
-            MPG = round(MPG, 2)
-            self.dvC.set(MPG) 
-        else:
-            messagebox.showerror("Error", "Please enter positive numbers!")
-
+    #    # verify entered values are positive number or displays error message 
+    #    if (mil >= 0) and (gal > 0):
+    #        MPG = self.mpg.calculate(mil,gal)
+    #        MPG = round(MPG, 2)
+    #        self.dvC.set(MPG) 
+    #    else:
+    #        messagebox.showerror("Error", "Please enter positive numbers!")
+            
     # define a method for clearing entry fields
     def clear(self):    
         self.dvA.set("")
